@@ -5,16 +5,13 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>ColinHouse 的主页</title>
-  <!-- 
-      欢迎来到90年代！
-      没有复杂的框架，没有npm，没有依赖，没有缓存错误。
-      只有一个HTML文件。
-    -->
+
+  <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
+
   <style>
     body {
       font-family: "Verdana", "Arial", "sans-serif";
       background-color: #c0c0c0;
-      /* 经典的灰色背景 */
       color: #000000;
       margin: 0;
       padding: 20px;
@@ -28,15 +25,20 @@
       border: 2px solid #000000;
       background-color: #ffffff;
       box-shadow: 5px 5px 0px #808080;
-      /* 复古的阴影 */
     }
 
     h1 {
       font-size: 28px;
       color: #000080;
-      /* 深蓝色 */
       border-bottom: 2px solid #000000;
       padding-bottom: 10px;
+    }
+
+    /* 【添加】让H1标题可点击返回首页 */
+    h1 a {
+      color: #000080;
+      text-decoration: none;
+      cursor: pointer;
     }
 
     p {
@@ -48,15 +50,10 @@
       font-size: 18px;
       font-weight: bold;
       color: #ff0000;
-      /* 红色 */
       background-color: #ffff00;
-      /* 黄色背景 */
       padding: 5px;
       text-align: center;
       border: 1px solid #000;
-      /* 使用 CSS animation 替代古老的 <marquee> 标签，
-              因为它已经被废弃了... 但我们可以模拟它！
-            */
       overflow: hidden;
       white-space: nowrap;
     }
@@ -75,8 +72,6 @@
       100% {
         transform: translate(-200%, 0);
       }
-
-      /* 调整以适应文本长度 */
     }
 
     .links {
@@ -85,8 +80,9 @@
 
     .links a {
       color: #0000ff;
-      /* 经典的蓝色链接 */
       text-decoration: underline;
+      cursor: pointer;
+      /* 【添加】让它看起来像个按钮 */
     }
 
     .footer {
@@ -94,6 +90,35 @@
       font-size: 12px;
       text-align: center;
       color: #333333;
+    }
+
+    /* 2. 【添加】为MD内容添加的样式 */
+    #content-display {
+      margin-top: 30px;
+      padding-top: 20px;
+      border-top: 1px dashed #808080;
+    }
+
+    /* 为 marked.js 转换后的 HTML 添加一点点样式 */
+    #content-display h1 {
+      font-size: 24px;
+      color: #333;
+    }
+
+    #content-display h2 {
+      font-size: 20px;
+      color: #444;
+    }
+
+    #content-display pre {
+      background-color: #f0f0f0;
+      padding: 10px;
+      border: 1px solid #ccc;
+      overflow-x: auto;
+    }
+
+    #content-display code {
+      font-family: "Courier New", Courier, monospace;
     }
   </style>
 </head>
@@ -108,27 +133,28 @@
       </span>
     </div>
 
-    <h1>👋 你好, 世界!</h1>
+    <h1><a onclick="showHomepage(); return false;">👋 你好, 世界!</a></h1>
 
-    <p>
-      这里是 ColinHouse。
-    </p>
-    <p>
-      这个网站是纯手写的HTML，用来代替那个部署了一万年还在报错的 VuePress 博客。
-      有时候，最简单的反而是最好的。
-    </p>
+    <div id="homepage-content">
+      <p>
+        这里是 ColinHouse。
+      </p>
+      <p>
+        这个网站是纯手写的HTML，用来代替那个部署了一万年还在报错的 VuePress 博客。
+        有时候，最简单的反而是最好的。
+      </p>
 
-    <div class="links">
-      <p><strong>我的链接:</strong></p>
-      <ul>
-        <!-- ... 原有的 first_post ... -->
-        <li><a onclick="loadMarkdown('first_post.md')">我的第一篇文章 (first_post.md)</a></li>
+      <div class="links">
+        <p><strong>我的链接 (点击加载):</strong></p>
+        <ul>
+          <li><a onclick="loadMarkdown('./first_post.md'); return false;">我的第一篇文章 (first_post.md)</a></li>
 
-        <!-- 您新添加的行 -->
-        <!-- <li><a onclick="loadMarkdown('second_post.md')">我的第二篇文章 (second_post.md)</a></li>
-        <li><a href="#">[链接 2 - 稍后添加]</a></li> -->
-      </ul>
+        </ul>
+      </div>
     </div>
+    <div id="content-display">
+    </div>
+
 
     <div class="footer">
       <p>最后更新于：一个阳光明媚的下午，当我受够了 EJSONPARSE 错误时。</p>
@@ -137,6 +163,58 @@
 
   </div>
 
+  <script>
+    // 获取元素
+    const homepageContent = document.getElementById('homepage-content');
+    const contentDisplay = document.getElementById('content-display');
+
+    /**
+     * 函数：加载并显示 Markdown 文件
+     * 这就是您 onclick 调用的函数！
+     */
+    async function loadMarkdown(mdFileUrl) {
+      try {
+        // 1. 隐藏主页内容
+        homepageContent.style.display = 'none';
+
+        // 2. 显示加载中...
+        contentDisplay.innerHTML = '<p>加载中...</p>';
+
+        // 3. 异步获取 .md 文件
+        const response = await fetch(mdFileUrl);
+        if (!response.ok) {
+          // 如果 fetch 失败 (例如 404), 抛出错误
+          throw new Error('找不到文件: ' + mdFileUrl + ' (请检查路径是否正确)');
+        }
+        const markdownText = await response.text();
+
+        // 4. 使用 marked.js 将 MD 转换为 HTML
+        // 检查 marked 是否被正确加载
+        if (typeof marked === 'undefined') {
+          throw new Error('marked.js 库没有被正确加载。');
+        }
+        const htmlContent = marked.parse(markdownText);
+
+        // 5. 将 HTML 显示在页面上
+        contentDisplay.innerHTML = htmlContent;
+
+      } catch (error) {
+        // 如果任何一步出错，都在这里显示错误信息
+        console.error(error);
+        contentDisplay.innerHTML = `<p style="color: red; font-weight: bold;">加载失败：${error.message}</p>`;
+      }
+    }
+
+    /**
+     * 函数：显示主页 (当点击标题时)
+     */
+    function showHomepage() {
+      homepageContent.style.display = 'block'; // 显示主页
+      contentDisplay.innerHTML = ''; // 清空MD内容
+    }
+  </script>
+
 </body>
 
 </html>
+```eof
