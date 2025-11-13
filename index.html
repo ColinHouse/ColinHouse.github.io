@@ -34,7 +34,6 @@
       padding-bottom: 10px;
     }
 
-    /* 【添加】让H1标题可点击返回首页 */
     h1 a {
       color: #000080;
       text-decoration: none;
@@ -82,7 +81,6 @@
       color: #0000ff;
       text-decoration: underline;
       cursor: pointer;
-      /* 【添加】让它看起来像个按钮 */
     }
 
     .footer {
@@ -92,14 +90,12 @@
       color: #333333;
     }
 
-    /* 2. 【添加】为MD内容添加的样式 */
     #content-display {
       margin-top: 30px;
       padding-top: 20px;
       border-top: 1px dashed #808080;
     }
 
-    /* 为 marked.js 转换后的 HTML 添加一点点样式 */
     #content-display h1 {
       font-size: 24px;
       color: #333;
@@ -120,6 +116,20 @@
     #content-display code {
       font-family: "Courier New", Courier, monospace;
     }
+
+    /* 【这就是您需要添加的修复代码！】
+      确保MD内容中的图片不会溢出 
+    */
+    #content-display img {
+      max-width: 100%;
+      /* 图片最大宽度为父容器的100% */
+      height: auto;
+      /* 高度自动调整，保持图片比例 */
+      display: block;
+      /* 确保图片是块级元素，避免底部额外空白 */
+      margin: 10px 0;
+      /* 给图片上下留点间距 */
+    }
   </style>
 </head>
 
@@ -133,22 +143,23 @@
       </span>
     </div>
 
-    <h1><a onclick="showHomepage(); return false;">👋 你好, 世界!</a></h1>
+    <h1><a onclick="showHomepage(); return false;">👋 Back to the Homepage</a></h1>
 
     <div id="homepage-content">
       <p>
-        这里是 ColinHouse。
+        This is ColinHouse's homepage.
       </p>
       <p>
-        这个网站是纯手写的HTML，用来代替那个部署了一万年还在报错的 VuePress 博客。
-        有时候，最简单的反而是最好的。
+        This website is entirely handwritten HTML, used to replace that VuePress blog that's been stuck with errors for
+        ages.
+
+        Sometimes, the simplest is the best.
       </p>
 
       <div class="links">
-        <p><strong>我的链接 (点击加载):</strong></p>
+        <p><strong>My Links (Click to Load):</strong></p>
         <ul>
-          <li><a onclick="loadMarkdown('./first_post.md'); return false;">我的第一篇文章 (first_post.md)</a></li>
-
+          <li><a onclick="loadMarkdown('./first_post.md'); return false;">My First Post (first_post.md)</a></li>
         </ul>
       </div>
     </div>
@@ -157,20 +168,19 @@
 
 
     <div class="footer">
-      <p>最后更新于：一个阳光明媚的下午，当我受够了 EJSONPARSE 错误时。</p>
+      <p>Last updated on: A sunny afternoon when I got fed up with the EJSONPARSE error.</p>
       <p>&copy; 2025 ColinHouse</p>
     </div>
 
   </div>
 
   <script>
-    // 获取元素
+    // Get elements
     const homepageContent = document.getElementById('homepage-content');
     const contentDisplay = document.getElementById('content-display');
 
     /**
-     * 函数：加载并显示 Markdown 文件
-     * 这就是您 onclick 调用的函数！
+     * Function: Load and display Markdown file
      */
     async function loadMarkdown(mdFileUrl) {
       try {
@@ -183,13 +193,11 @@
         // 3. 异步获取 .md 文件
         const response = await fetch(mdFileUrl);
         if (!response.ok) {
-          // 如果 fetch 失败 (例如 404), 抛出错误
           throw new Error('找不到文件: ' + mdFileUrl + ' (请检查路径是否正确)');
         }
         const markdownText = await response.text();
 
         // 4. 使用 marked.js 将 MD 转换为 HTML
-        // 检查 marked 是否被正确加载
         if (typeof marked === 'undefined') {
           throw new Error('marked.js 库没有被正确加载。');
         }
@@ -199,7 +207,6 @@
         contentDisplay.innerHTML = htmlContent;
 
       } catch (error) {
-        // 如果任何一步出错，都在这里显示错误信息
         console.error(error);
         contentDisplay.innerHTML = `<p style="color: red; font-weight: bold;">加载失败：${error.message}</p>`;
       }
@@ -217,4 +224,3 @@
 </body>
 
 </html>
-```eof
