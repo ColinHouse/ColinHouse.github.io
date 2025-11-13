@@ -1,0 +1,138 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>ColinHouse 的主页</title>
+  <!-- 
+      欢迎来到90年代！
+      没有复杂的框架，没有npm，没有依赖，没有缓存错误。
+      只有一个HTML文件。
+    -->
+  <style>
+    body {
+      font-family: "Verdana", "Arial", "sans-serif";
+      background-color: #c0c0c0;
+      /* 经典的灰色背景 */
+      color: #000000;
+      margin: 0;
+      padding: 20px;
+    }
+
+    .container {
+      width: 90%;
+      max-width: 800px;
+      margin: 20px auto;
+      padding: 30px;
+      border: 2px solid #000000;
+      background-color: #ffffff;
+      box-shadow: 5px 5px 0px #808080;
+      /* 复古的阴影 */
+    }
+
+    h1 {
+      font-size: 28px;
+      color: #000080;
+      /* 深蓝色 */
+      border-bottom: 2px solid #000000;
+      padding-bottom: 10px;
+    }
+
+    p {
+      font-size: 16px;
+      line-height: 1.6;
+    }
+
+    .welcome-marquee {
+      font-size: 18px;
+      font-weight: bold;
+      color: #ff0000;
+      /* 红色 */
+      background-color: #ffff00;
+      /* 黄色背景 */
+      padding: 5px;
+      text-align: center;
+      border: 1px solid #000;
+      /* 使用 CSS animation 替代古老的 <marquee> 标签，
+              因为它已经被废弃了... 但我们可以模拟它！
+            */
+      overflow: hidden;
+      white-space: nowrap;
+    }
+
+    .welcome-marquee span {
+      display: inline-block;
+      padding-left: 100%;
+      animation: marquee 15s linear infinite;
+    }
+
+    @keyframes marquee {
+      0% {
+        transform: translate(0, 0);
+      }
+
+      100% {
+        transform: translate(-200%, 0);
+      }
+
+      /* 调整以适应文本长度 */
+    }
+
+    .links {
+      margin-top: 30px;
+    }
+
+    .links a {
+      color: #0000ff;
+      /* 经典的蓝色链接 */
+      text-decoration: underline;
+    }
+
+    .footer {
+      margin-top: 40px;
+      font-size: 12px;
+      text-align: center;
+      color: #333333;
+    }
+  </style>
+</head>
+
+<body>
+
+  <div class="container">
+
+    <div class="welcome-marquee">
+      <span>
+        !!! 欢迎来到 ColinHouse 的个人主页 ~ Welcome to my Homepage !!!
+      </span>
+    </div>
+
+    <h1>👋 你好, 世界!</h1>
+
+    <p>
+      这里是 ColinHouse。
+    </p>
+    <p>
+      这个网站是纯手写的HTML，用来代替那个部署了一万年还在报错的 VuePress 博客。
+      有时候，最简单的反而是最好的。
+    </p>
+
+    <div class="links">
+      <p><strong>我的链接:</strong></p>
+      <ul>
+        <li><a href="#">[链接 1 - 稍后添加]</a></li>
+        <li><a href="#">[链接 2 - 稍后添加]</a></li>
+      </ul>
+    </div>
+
+    <div class="footer">
+      <p>最后更新于：一个阳光明媚的下午，当我受够了 EJSONPARSE 错误时。</p>
+      <p>&copy; 2025 ColinHouse</p>
+    </div>
+
+  </div>
+
+</body>
+
+</html>
